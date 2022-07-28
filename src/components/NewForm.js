@@ -1,4 +1,4 @@
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field, FieldArray, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import TextError from "./TextError";
 const NewForm = () => {
@@ -13,6 +13,7 @@ const NewForm = () => {
       twitter: "",
     },
     phoneNumbers: ["", ""],
+    phNumbers: [""],
   };
 
   const onSubmit = (values) => {
@@ -64,9 +65,9 @@ const NewForm = () => {
         <div className="form-control">
           <label htmlFor="address">Address</label>
           <Field name="address">
-            {(props) => {
-              const { field, form, meta } = props;
-              //console.log(props);
+            {(fieldProps) => {
+              const { field, form, meta } = fieldProps;
+              //console.log("fieldProps", fieldProps);
               return (
                 <div>
                   <input id="address" {...field} />
@@ -89,12 +90,42 @@ const NewForm = () => {
 
         <div className="form-control">
           <label htmlFor="primaryPh">Primary phone number</label>
-          <Field type="text" id="primaryPh" name="phoneNumber[0]" />
+          <Field type="text" id="primaryPh" name="phoneNumbers[0]" />
         </div>
 
         <div className="form-control">
           <label htmlFor="secondaryPh">Secondary phone number</label>
-          <Field type="text" id="secondaryPh" name="phoneNumber[1]" />
+          <Field type="text" id="secondaryPh" name="phoneNumbers[1]" />
+        </div>
+
+        <div className="form-control">
+          <label>List of phone numbers</label>
+          <FieldArray name="phNumbers">
+            {(fieldArrayProps) => {
+              //console.log("fieldArrayProps", fieldArrayProps);
+              const { push, remove, form } = fieldArrayProps;
+              const { values } = form;
+              const { phNumbers } = values;
+              return (
+                <div>
+                  {phNumbers.map((phNumber, index) => (
+                    <div key={index}>
+                      <span>{`${index + 1} number`}</span>
+                      <Field name={`phNumbers[${index}]`} />
+                      <button type="button" onClick={() => push(index)}>
+                        +
+                      </button>
+                      {index > 0 && (
+                        <button type="button" onClick={() => remove(index)}>
+                          -
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              );
+            }}
+          </FieldArray>
         </div>
 
         <button type="submits">Submit</button>
