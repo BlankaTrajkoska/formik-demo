@@ -6,6 +6,8 @@ const NewForm = () => {
     name: "",
     email: "",
     channel: "",
+    comments: "",
+    address: "",
   };
 
   const onSubmit = (values) => {
@@ -43,6 +45,28 @@ const NewForm = () => {
           <label htmlFor="channel">Channel</label>
           <Field type="text" name="channel" id="channel" />
           <ErrorMessage name="channel" />
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="comments">Comments</label>
+          <Field as="textarea" name="comments" id="comments" />
+          <ErrorMessage name="comments" />
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="address">Address</label>
+          <Field name="address">
+            {(props) => {
+              const { field, form, meta } = props;
+              console.log(props);
+              return (
+                <div>
+                  <input id="address" {...field} />
+                  {meta.touched && meta.error ? <div>{meta.error}</div> : null}
+                </div>
+              );
+            }}
+          </Field>
         </div>
 
         <button type="submits">Submit</button>
